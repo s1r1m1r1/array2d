@@ -123,4 +123,18 @@ class Array2d<T> {
     }
     return null;
   }
+
+  /// Replaces all elements in the 2D array that satisfy the provided test function with a new value.
+  ///
+  /// The [test] function is called with each element and its coordinates.
+  /// If the function returns true, the element is replaced with [newValue].
+  void replaceWhere(bool Function(T element, int x, int y) test, T newValue) {
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        if (test(array[x][y], x, y)) {
+          array[x][y] = newValue;
+        }
+      }
+    }
+  }
 }

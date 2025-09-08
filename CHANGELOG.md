@@ -8,6 +8,10 @@
 * remove resize width and height
 
 ## 1.2.0
-* add where and whereType 
+* added where and whereType 
+
+## 1.3.0
+* added  replaceWhere 
+
 
 
