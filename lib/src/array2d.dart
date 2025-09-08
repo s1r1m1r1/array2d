@@ -26,45 +26,22 @@ class Array2d<T> {
   }
 
   /// Accesses the row at the given x-coordinate.
-  List<T> operator [](int x) => array[x];
+  ///  array2d[x][y]
+  ///
+  List<T> operator [](int y) => array[y];
 
   /// The width of the 2D array.
   int get width => array.length;
 
   /// The height of the 2D array.
-  int get height => array.isNotEmpty ? array[0].length : 0;
+  /// height is always positive and greater than 0
+  int get height => array[0].length;
 
   /// Returns the first row of the 2D array.
   get first => array.first;
 
-
   /// Returns the number of rows (width) of the array.  (Same as [width])
   get length => array.length;
-
-
-  /// Resizes the array to the new width and height.
-  ///
-  /// Existing values are copied to the new array. New cells are
-  /// initialized using the `valueBuilder`. Throws an [ArgumentError]
-  /// if [newWidth] or [newHeight] are not positive.
-  void resize(int newWidth, int newHeight) {
-    if (newWidth <= 0 || newHeight <= 0) {
-      throw ArgumentError("New width and height must be positive integers.");
-    }
-
-    final newArray = List.generate(
-        newWidth, (x) => List<T>.generate(newHeight, (y) => valueBuilder(x, y)),
-        growable: false);
-
-    // Copy existing data (as much as possible)
-    for (int x = 0; x < width && x < newWidth; x++) {
-      for (int y = 0; y < height && y < newHeight; y++) {
-        newArray[x][y] = array[x][y];
-      }
-    }
-
-    array = newArray;
-  }
 
   /// Sets the value at the specified x and y coordinates.
   ///
