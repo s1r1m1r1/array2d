@@ -1,6 +1,6 @@
 name: array2d
 description: "Array2d"
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/s1r1m1r1/array2d
 resolution: workspace
 
@@ -13,6 +13,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+dependencies:
+  test: ^1.26.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

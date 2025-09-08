@@ -93,4 +93,34 @@ class Array2d<T> {
       action(column, y);
     }
   }
+
+  /// Returns the first element in the 2D array for which the provided test function returns true.
+  ///
+  /// If no element matches, returns null.
+  T? where(bool Function(T element, int x, int y) test) {
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        T element = array[x][y];
+        if (test(element, x, y)) {
+          return element;
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Returns the first element in the 2D array that is of the specified type `R`.
+  ///
+  /// If no element matches, returns null.
+  R? whereType<R>() {
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        var element = array[x][y];
+        if (element is R) {
+          return element;
+        }
+      }
+    }
+    return null;
+  }
 }

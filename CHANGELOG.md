@@ -7,3 +7,7 @@
 ## 1.1.0
 * remove resize width and height
 
+## 1.2.0
+* add where and whereType 
+
+
