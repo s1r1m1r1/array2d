@@ -10,9 +10,10 @@ void main() {
       final array = Array2d<int>(3, 3, valueBuilder: (x, y) => x * 10 + y);
 
       // Find the first element greater than 15
-      final foundElement = array.where((element, x, y) => element > 15);
+      final PointData<int>? foundElement =
+          array.firstWhereabout((element) => element > 15);
 
-      expect(foundElement,
+      expect(foundElement?.element,
           equals(20)); // 20 is at (x=2, y=0) and is the first > 15
     });
 
@@ -20,18 +21,10 @@ void main() {
       final array = Array2d<int>(2, 2, valueBuilder: (x, y) => x + y);
 
       // Try to find an element greater than 10 (which doesn't exist)
-      final foundElement = array.where((element, x, y) => element > 10);
+      final PointData<int>? foundElement =
+          array.firstWhereabout((element) => element > 10);
 
-      expect(foundElement, isNull);
-    });
-
-    test('should correctly use x and y coordinates in the condition', () {
-      final array = Array2d<String>(2, 2, valueBuilder: (x, y) => '($x,$y)');
-
-      // Find the element at coordinates (1, 0)
-      final foundElement = array.where((element, x, y) => x == 1 && y == 0);
-
-      expect(foundElement, equals('(1,0)'));
+      expect(foundElement?.element, isNull);
     });
 
     test(
@@ -39,10 +32,10 @@ void main() {
         () {
       final array = Array2d<int>(2, 2, valueBuilder: (x, y) => x + y);
 
-      final foundElement =
-          array.where((element, x, y) => element == 0); // Element at (0,0) is 0
+      final foundElement = array
+          .firstWhereabout((element) => element == 0); // Element at (0,0) is 0
 
-      expect(foundElement, equals(0));
+      expect(foundElement?.element, equals(0));
     });
   });
 
@@ -55,12 +48,12 @@ void main() {
       });
 
       // Find the first String element
-      final foundString = array.whereType<String>();
-      expect(foundString, equals('hello'));
+      final foundString = array.firstWhereaboutType<String>();
+      expect(foundString?.element, equals('hello'));
 
       // Find the first int element
-      final foundInt = array.whereType<int>();
-      expect(foundInt, equals(123));
+      final foundInt = array.firstWhereaboutType<int>();
+      expect(foundInt?.element, equals(123));
     });
 
     test('should return null if no element of the specified type is found', () {
@@ -68,8 +61,8 @@ void main() {
           Array2d<Object>(2, 2, valueBuilder: (x, y) => x + y); // All ints
 
       // Try to find a String element
-      final foundString = array.whereType<String>();
-      expect(foundString, isNull);
+      final foundString = array.firstWhereaboutType<String>();
+      expect(foundString?.element, isNull);
     });
 
     test('should handle nullable types correctly', () {
@@ -79,15 +72,15 @@ void main() {
       });
 
       // Find the first String element (non-null)
-      final foundString = array.whereType<String>();
-      expect(foundString, equals('world'));
+      final foundString = array.firstWhereaboutType<String>();
+      expect(foundString?.element, equals('world'));
 
       // Find the first String? element (could be null)
-      final foundNullableString = array.whereType<String>();
+      final foundNullableString = array.firstWhereaboutType<String>();
       // The first String? element encountered might be null, depending on iteration order.
       // For simplicity, let's check if it returns *a* String? value.
       // A more specific test might be needed if the exact null value is important.
-      expect(foundNullableString,
+      expect(foundNullableString?.element,
           isNotNull); // Or expect(foundNullableString, equals('world')) if it's guaranteed first
     });
 
@@ -99,8 +92,8 @@ void main() {
       // If the constructor allowed 0 width/height, this would be relevant.
       // For demonstration purposes, we'll simulate by creating an array and then trying to find a type.
       final array = Array2d<int>(1, 1, valueBuilder: (x, y) => 5);
-      final foundDouble = array.whereType<double>();
-      expect(foundDouble, isNull);
+      final foundDouble = array.firstWhereaboutType<double>();
+      expect(foundDouble?.element, isNull);
     });
   });
 }

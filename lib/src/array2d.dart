@@ -1,3 +1,5 @@
+import 'package:array2d/src/point_data.dart';
+
 /// Represents a fixed-size two-dimensional array.
 ///
 /// Provides methods for accessing, modifying, and iterating over elements
@@ -97,12 +99,12 @@ class Array2d<T> {
   /// Returns the first element in the 2D array for which the provided test function returns true.
   ///
   /// If no element matches, returns null.
-  T? where(bool Function(T element, int x, int y) test) {
+  PointData<T>? firstWhereabout(bool Function(T element) test) {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         T element = array[x][y];
-        if (test(element, x, y)) {
-          return element;
+        if (test(element)) {
+          return PointData(element, x, y);
         }
       }
     }
@@ -112,29 +114,46 @@ class Array2d<T> {
   /// Returns the first element in the 2D array that is of the specified type `R`.
   ///
   /// If no element matches, returns null.
-  R? whereType<R>() {
+  PointData<R>? firstWhereaboutType<R>() {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         var element = array[x][y];
         if (element is R) {
-          return element;
+          return PointData(element, x, y);
         }
       }
     }
     return null;
   }
 
-  /// Replaces all elements in the 2D array that satisfy the provided test function with a new value.
-  ///
-  /// The [test] function is called with each element and its coordinates.
-  /// If the function returns true, the element is replaced with [newValue].
-  void replaceWhere(bool Function(T element, int x, int y) test, T newValue) {
+  // Add this method to your Array2d class
+  List<PointData<T>> whereabout(bool Function(T element) test) {
+    final data = <PointData<T>>[];
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        if (test(array[x][y], x, y)) {
-          array[x][y] = newValue;
+        T element = array[x][y];
+        if (test(element)) {
+          data.add(PointData<T>(element, x, y));
         }
       }
     }
+    return data;
+  }
+
+  List<PointData<R>> whereaboutType<R>(bool Function(R element)? test) {
+    final data = <PointData<R>>[];
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        T element = array[x][y];
+        if (element is R) {
+          if (test == null) {
+            data.add(PointData<R>(element, x, y));
+          } else if (test(element)) {
+            data.add(PointData<R>(element, x, y));
+          }
+        }
+      }
+    }
+    return data;
   }
 }

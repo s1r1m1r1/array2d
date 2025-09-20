@@ -52,21 +52,14 @@ void main() {
       expect(visited, equals([0, 1, 2, 10, 11, 12]));
     });
 
-    // Test for the `replaceWhere` method
-    test('replaceWhere replaces elements that satisfy the condition', () {
-      final array = Array2d<int>(2, 2, valueBuilder: (x, y) => x);
-      array.replaceWhere((element, x, y) => element == 1, 99);
-      expect(array.getValue(0, 0), equals(0));
-      expect(array.getValue(0, 1), equals(0));
-      expect(array.getValue(1, 0), equals(99));
-      expect(array.getValue(1, 1), equals(99));
-    });
-
     // Test for the `where` method
     test('where returns the first matching element', () {
       final array = Array2d<int>(3, 3, valueBuilder: valueBuilder);
-      final result = array.where((element, x, y) => element == 11);
-      expect(result, equals(11));
+      final PointData<int>? result = array.firstWhereabout((
+        element,
+      ) =>
+          element == 11);
+      expect(result?.element, equals(11));
     });
   });
   // Test `where` returns null
