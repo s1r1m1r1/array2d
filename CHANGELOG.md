@@ -1,4 +1,8 @@
 
+
+## 1.5.0
+  * added getRowOrNull and getValueOrNull methods
+
 ## 1.4.0
   added whereabout methods
 ## 1.3.0

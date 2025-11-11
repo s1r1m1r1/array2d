@@ -39,9 +39,6 @@ class Array2d<T> {
   /// height is always positive and greater than 0
   int get height => array[0].length;
 
-  /// Returns the first row of the 2D array.
-  get first => array.first;
-
   /// Returns the number of rows (width) of the array.  (Same as [width])
   get length => array.length;
 
@@ -155,5 +152,23 @@ class Array2d<T> {
       }
     }
     return data;
+  }
+
+  /// Provides safe, nullable access to the row (the List<T>) at the given x-coordinate.
+  ///
+  /// If the x-coordinate is out of bounds, returns `null`.
+  /// Usage: array2d.getRowSafe(x)
+  List<T>? getRowOrNull(int x) {
+    if (x >= 0 && x < width) {
+      return array[x];
+    }
+    return null;
+  }
+
+  T? getValueOrNull(int x, int y) {
+    if (x >= 0 && x < width && y >= 0 && y < height) {
+      return array[x][y];
+    }
+    return null;
   }
 }
