@@ -28,28 +28,18 @@ void main() {
     // Test case for getting and setting values
     test('getValue and setValue work correctly', () {
       final array = Array2d<String>(2, 2, valueBuilder: (x, y) => '($x,$y)');
-      expect(array.getValue(0, 0), equals('(0,0)'));
+      expect(array.elementAt(0, 0), equals('(0,0)'));
       array.setValue(0, 0, 'new_value');
-      expect(array.getValue(0, 0), equals('new_value'));
+      expect(array.elementAt(0, 0), equals('new_value'));
     });
 
     // Test for out-of-bounds access
     test('getValue and setValue throw RangeError for out-of-bounds access', () {
       final array = Array2d<int>(2, 2, valueBuilder: (x, y) => 0);
-      expect(() => array.getValue(2, 0), throwsA(isA<RangeError>()));
-      expect(() => array.getValue(0, 2), throwsA(isA<RangeError>()));
+      expect(() => array.elementAt(2, 0), throwsA(isA<RangeError>()));
+      expect(() => array.elementAt(0, 2), throwsA(isA<RangeError>()));
       expect(() => array.setValue(2, 0, 1), throwsA(isA<RangeError>()));
       expect(() => array.setValue(0, 2, 1), throwsA(isA<RangeError>()));
-    });
-
-    // Test for the `forEach` method
-    test('forEach iterates through all elements', () {
-      final array = Array2d<int>(2, 3, valueBuilder: valueBuilder);
-      final visited = <int>[];
-      array.forEach((value, x, y) {
-        visited.add(value);
-      });
-      expect(visited, equals([0, 1, 2, 10, 11, 12]));
     });
 
     // Test for the `where` method

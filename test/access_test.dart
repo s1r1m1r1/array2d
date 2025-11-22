@@ -17,7 +17,7 @@ void main() {
       matrix.setValue(1, 2, 99);
 
       // Verify
-      expect(matrix.getValue(1, 2), equals(99));
+      expect(matrix.elementAt(1, 2), equals(99));
     });
 
     // --- TEST 3: Mutable Objects (Reference) ---
@@ -30,11 +30,11 @@ void main() {
       // Access the object via the column accessor
       // logic: matrix[x] returns a list of references.
       // matrix[x][y] returns the reference to the specific BoxedInt.
-      matrix[0][1].value = 100;
+      matrix.elementAt(0, 1).value = 100;
 
       // Verify the original matrix holds the updated value
       // This works because we modified the OBJECT, not the ARRAY slot.
-      expect(matrix.getValue(0, 1).value, equals(100));
+      expect(matrix.elementAt(0, 1).value, equals(100));
     });
 
     // --- TEST 4: Bounds Checking ---

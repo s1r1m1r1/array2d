@@ -1,5 +1,4 @@
 import 'package:array2d/src/point_data.dart';
-import 'column_viewer.dart';
 
 /// Represents a fixed-size two-dimensional array stored internally as a
 /// single one-dimensional array using a Column-Major mapping scheme.
@@ -47,17 +46,6 @@ class Array2d<T> {
     return x * _height + y;
   }
 
-  /// Accesses the column at the given x-coordinate as a View.
-  ///
-  /// Note: This operation is zero-copy. It returns a [ColumnView]
-  /// which allows reading and writing directly to the underlying array.
-  ColumnView<T> operator [](int x) {
-    if (x >= 0 && x < _width) {
-      return ColumnView(this, x);
-    }
-    throw RangeError("Column index $x out of bounds for width $_width");
-  }
-
   /// The width (number of columns) of the 2D array.
   int get width => _width;
 
@@ -82,21 +70,12 @@ class Array2d<T> {
   /// Gets the value at the specified x (column) and y (row) coordinates.
   ///
   /// Throws a [RangeError] if the coordinates are out of bounds.
-  T getValue(int x, int y) {
+  T elementAt(int x, int y) {
     if (x >= 0 && x < _width && y >= 0 && y < _height) {
       return array[_to1DIndex(x, y)];
     } else {
       throw RangeError(
           "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
-    }
-  }
-
-  /// Iterates over each element in the 2D array and calls the provided function.
-  void forEach(void Function(T value, int x, int y) action) {
-    for (int x = 0; x < _width; x++) {
-      for (int y = 0; y < _height; y++) {
-        action(array[_to1DIndex(x, y)], x, y);
-      }
     }
   }
 
@@ -169,7 +148,7 @@ class Array2d<T> {
   /// Provides safe, nullable access to the element at the specified x and y coordinates.
   ///
   /// If the coordinates are out of bounds, returns `null`.
-  T? getValueOrNull(int x, int y) {
+  T? elementAtOrNull(int x, int y) {
     if (x >= 0 && x < _width && y >= 0 && y < _height) {
       return array[_to1DIndex(x, y)];
     }

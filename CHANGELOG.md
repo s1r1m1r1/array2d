@@ -1,3 +1,7 @@
+## 2.3.0
+elementAt(x,y) instead getter [x][y]
+setValue(x,y,value) instead setter [x][y]
+
 ## 2.2.0
  removed forEachRow , forEachColumn
 
