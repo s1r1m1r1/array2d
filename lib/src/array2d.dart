@@ -59,9 +59,9 @@ class Array2d<T> {
   ///
   /// Throws a [RangeError] if the coordinates are out of bounds.
   void setValue(int x, int y, T value) {
-    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+    try {
       array[_to1DIndex(x, y)] = value;
-    } else {
+    } on RangeError {
       throw RangeError(
           "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
@@ -71,9 +71,9 @@ class Array2d<T> {
   ///
   /// Throws a [RangeError] if the coordinates are out of bounds.
   T elementAt(int x, int y) {
-    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+    try {
       return array[_to1DIndex(x, y)];
-    } else {
+    } on RangeError {
       throw RangeError(
           "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
