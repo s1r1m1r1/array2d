@@ -1,5 +1,4 @@
 import 'package:array2d/src/point_data.dart';
-
 import 'column_viewer.dart';
 
 /// Represents a fixed-size two-dimensional array stored internally as a
@@ -48,11 +47,10 @@ class Array2d<T> {
     return x * _height + y;
   }
 
-  /// Accesses the column at the given x-coordinate (List<T>).
+  /// Accesses the column at the given x-coordinate as a View.
   ///
-  /// Note: This operation creates a new List from the contiguous slice
-  /// of the 1D array, which is efficient under Column-Major ordering.
-
+  /// Note: This operation is zero-copy. It returns a [ColumnView]
+  /// which allows reading and writing directly to the underlying array.
   ColumnView<T> operator [](int x) {
     if (x >= 0 && x < _width) {
       return ColumnView(this, x);
@@ -99,29 +97,6 @@ class Array2d<T> {
       for (int y = 0; y < _height; y++) {
         action(array[_to1DIndex(x, y)], x, y);
       }
-    }
-  }
-
-  /// Iterates over each row in the 2D array and calls the provided function.
-  void forEachRow(void Function(List<T> row, int y) action) {
-    for (int y = 0; y < _height; y++) {
-      List<T> row = [];
-      for (int x = 0; x < _width; x++) {
-        // Elements in a row are NOT contiguous in the 1D array.
-        row.add(array[_to1DIndex(x, y)]);
-      }
-      action(row, y);
-    }
-  }
-
-  /// Iterates over each column in the 2D array and calls the provided function.
-  void forEachColumn(void Function(List<T> column, int x) action) {
-    for (int x = 0; x < _width; x++) {
-      // Elements in a column ARE contiguous (Column-Major order)
-      final startIndex = _to1DIndex(x, 0);
-      // Create a sublist view for the column
-      final column = array.sublist(startIndex, startIndex + _height);
-      action(column, x);
     }
   }
 
@@ -189,17 +164,6 @@ class Array2d<T> {
       }
     }
     return data;
-  }
-
-  /// Provides safe, nullable access to the column (List<T>) at the given x-coordinate.
-  ///
-  /// If the x-coordinate is out of bounds, returns `null`.
-  List<T>? getColumnOrNull(int x) {
-    if (x >= 0 && x < _width) {
-      final startIndex = _to1DIndex(x, 0);
-      return array.sublist(startIndex, startIndex + _height);
-    }
-    return null;
   }
 
   /// Provides safe, nullable access to the element at the specified x and y coordinates.

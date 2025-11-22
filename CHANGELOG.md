@@ -1,3 +1,6 @@
+## 2.2.0
+ removed forEachRow , forEachColumn
+
 ## 2.1.0
 Restored Mutable Indexing & Performance Optimization
 
