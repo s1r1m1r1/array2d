@@ -1,5 +1,7 @@
 import 'package:array2d/src/point_data.dart';
 
+import 'column_viewer.dart';
+
 /// Represents a fixed-size two-dimensional array stored internally as a
 /// single one-dimensional array using a Column-Major mapping scheme.
 ///
@@ -50,11 +52,10 @@ class Array2d<T> {
   ///
   /// Note: This operation creates a new List from the contiguous slice
   /// of the 1D array, which is efficient under Column-Major ordering.
-  List<T> operator [](int x) {
+
+  ColumnView<T> operator [](int x) {
     if (x >= 0 && x < _width) {
-      final startIndex = _to1DIndex(x, 0);
-      // The column is stored contiguously from startIndex to startIndex + _height - 1
-      return array.sublist(startIndex, startIndex + _height);
+      return ColumnView(this, x);
     }
     throw RangeError("Column index $x out of bounds for width $_width");
   }

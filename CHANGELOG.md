@@ -1,3 +1,19 @@
+## 2.1.0
+Restored Mutable Indexing & Performance Optimization
+
+FIX: Restored support for the intuitive assignment syntax array[x][y] = value.
+
+Technical Detail: The operator [] now returns a lightweight ColumnView proxy instead of a List copy. This allows modifications to propagate directly to the internal storage without overhead.
+
+PERFORMANCE: Retained the internal flat-array architecture introduced in 2.0.0.
+
+~1.40x faster Read (Get Value) operations compared to standard 2D Lists.
+
+~1.26x faster Iteration speeds.
+
+~1.12x faster Write/Initialization speeds.
+
+
 # 2.0.0
 Performance & Refactoring
 
