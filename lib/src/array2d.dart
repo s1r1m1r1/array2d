@@ -105,7 +105,7 @@ class Array2d<T> {
         final element = array[_to1DIndex(x, y)];
         if (element is R) {
           // Cast is safe due to the check
-          return PointData(element as R, x, y);
+          return PointData<R>(element as R, x, y);
         }
       }
     }

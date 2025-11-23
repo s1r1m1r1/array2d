@@ -72,11 +72,21 @@ class Array2d2D<T> {
 
 /// Represents a 2D array stored internally as a single 1D array (Column-Major).
 class Array2d1D<T> {
+  /// The underlying 1D array storage.
   late final List<T> array;
+
+  /// Private storage for the dimensions.
   final int _width;
   final int _height;
+
+  /// A function that builds the initial value for each cell in the array.
+  /// Takes the x (column) and y (row) coordinates as arguments.
   final T Function(int x, int y) valueBuilder;
 
+  /// Creates a new [Array2d] with the specified width (columns) and height (rows).
+  ///
+  /// The [valueBuilder] function is used to initialize each element of the array.
+  /// Throws an [ArgumentError] if width or height are not positive.
   Array2d1D(int width, int height, {required this.valueBuilder})
       : _width = width,
         _height = height {
@@ -85,43 +95,130 @@ class Array2d1D<T> {
     }
 
     final totalSize = width * height;
+
+    // Initialize the single 1D array
     array = List<T>.generate(totalSize, (k) {
+      // Map 1D index k back to 2D coordinates (x, y) for the builder
       // k = x * height + y (Column-Major indexing)
-      final x = k ~/ height;
-      final y = k % height;
+      final x = k ~/ height; // Integer division gives the column index
+      final y = k % height; // Modulo gives the row index
       return valueBuilder(x, y);
     }, growable: false);
   }
 
+  /// Helper to convert 2D coordinates (x, y) into a 1D array index (k).
+  /// Uses Column-Major ordering: k = x * height + y.
   int _to1DIndex(int x, int y) {
     return x * _height + y;
   }
 
+  /// The width (number of columns) of the 2D array.
   int get width => _width;
+
+  /// The height (number of rows) of the 2D array.
   int get height => _height;
 
+  /// Returns the total number of elements in the 2D array.
+  int get length => array.length;
+
+  /// Sets the value at the specified x (column) and y (row) coordinates.
+  ///
+  /// Throws a [RangeError] if the coordinates are out of bounds.
   void setValue(int x, int y, T value) {
-    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+    try {
       array[_to1DIndex(x, y)] = value;
-    } else {
-      throw RangeError("Index out of bounds");
+    } on RangeError {
+      throw RangeError(
+          "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
   }
 
-  T getValue(int x, int y) {
-    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+  /// Gets the value at the specified x (column) and y (row) coordinates.
+  ///
+  /// Throws a [RangeError] if the coordinates are out of bounds.
+  T elementAt(int x, int y) {
+    try {
       return array[_to1DIndex(x, y)];
-    } else {
-      throw RangeError("Index out of bounds");
+    } on RangeError {
+      throw RangeError(
+          "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
   }
 
-  void forEach(void Function(T value, int x, int y) action) {
+  /// Returns the first element in the 2D array for which the provided test function returns true,
+  /// along with its coordinates.
+  ///
+  /// If no element matches, returns null.
+  PointData<T>? firstWhereabout(bool Function(T element) test) {
     for (int x = 0; x < _width; x++) {
       for (int y = 0; y < _height; y++) {
-        action(array[_to1DIndex(x, y)], x, y);
+        final element = array[_to1DIndex(x, y)];
+        if (test(element)) {
+          return PointData(element, x, y);
+        }
       }
     }
+    return null;
+  }
+
+  /// Returns the first element in the 2D array that is of the specified type `R`,
+  /// along with its coordinates.
+  ///
+  /// If no element matches, returns null.
+  PointData<R>? firstWhereaboutType<R>() {
+    for (int x = 0; x < _width; x++) {
+      for (int y = 0; y < _height; y++) {
+        final element = array[_to1DIndex(x, y)];
+        if (element is R) {
+          // Cast is safe due to the check
+          return PointData<R>(element as R, x, y);
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Returns a list of all elements in the 2D array for which the provided test function returns true,
+  /// each wrapped with its coordinates.
+  List<PointData<T>> whereabout(bool Function(T element) test) {
+    final data = <PointData<T>>[];
+    for (int x = 0; x < _width; x++) {
+      for (int y = 0; y < _height; y++) {
+        final element = array[_to1DIndex(x, y)];
+        if (test(element)) {
+          data.add(PointData<T>(element, x, y));
+        }
+      }
+    }
+    return data;
+  }
+
+  /// Returns a list of all elements that are of the specified type `R`, optionally filtered by a test function.
+  List<PointData<R>> whereaboutType<R>(bool Function(R element)? test) {
+    final data = <PointData<R>>[];
+    for (int x = 0; x < _width; x++) {
+      for (int y = 0; y < _height; y++) {
+        final element = array[_to1DIndex(x, y)];
+        if (element is R) {
+          // Cast to R is safe due to the check
+          final rElement = element as R;
+          if (test == null || test(rElement)) {
+            data.add(PointData<R>(rElement, x, y));
+          }
+        }
+      }
+    }
+    return data;
+  }
+
+  /// Provides safe, nullable access to the element at the specified x and y coordinates.
+  ///
+  /// If the coordinates are out of bounds, returns `null`.
+  T? elementAtOrNull(int x, int y) {
+    if (x >= 0 && x < _width && y >= 0 && y < _height) {
+      return array[_to1DIndex(x, y)];
+    }
+    return null;
   }
 }
 
@@ -157,8 +254,10 @@ void main() {
   print('Warming up with a ${WARMUP_SIZE}x${WARMUP_SIZE} array...');
   Array2d2D(WARMUP_SIZE, WARMUP_SIZE, valueBuilder: (x, y) => x + y)
       .forEach((v, x, y) {});
-  Array2d1D(WARMUP_SIZE, WARMUP_SIZE, valueBuilder: (x, y) => x + y)
-      .forEach((v, x, y) {});
+
+  final array2d1D =
+      Array2d1D(WARMUP_SIZE, WARMUP_SIZE, valueBuilder: (x, y) => x + y);
+  for (var v in array2d1D.array) {}
   print('Warmup complete.\n');
 
   // --- INITIALIZATION BENCHMARK ---
@@ -200,7 +299,7 @@ void main() {
 
   int get1DTime = runBenchmark('Array2d1D (List<T>)', () {
     for (var p in randomCoords) {
-      array1D.getValue(p.x.toInt(), p.y.toInt());
+      array1D.elementAt(p.x.toInt(), p.y.toInt());
     }
   });
 
@@ -234,7 +333,9 @@ void main() {
 
   int iteration1DTime = runBenchmark('Array2d1D (List<T>)', () {
     int sum = 0;
-    array1D.forEach((v, x, y) => sum += v as int);
+    for (var v in array1D.array) {
+      sum += v;
+    }
   });
 
   print('----------------------------------------------------');
