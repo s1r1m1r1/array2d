@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, constant_identifier_names, unused_local_variable, unintended_html_in_doc_comment
+
 import 'dart:math';
 
 // ====================================================================
@@ -245,13 +247,13 @@ void main() {
 
   print('Configuration:');
   print(
-      'Array Size: ${BENCHMARK_SIZE}x${BENCHMARK_SIZE} (${NUM_OPERATIONS} elements)');
-  print('Operation Count for R/W: ${NUM_OPERATIONS} random accesses');
+      'Array Size: ${BENCHMARK_SIZE}x$BENCHMARK_SIZE ($NUM_OPERATIONS elements)');
+  print('Operation Count for R/W: $NUM_OPERATIONS random accesses');
   print('----------------------------------------------------');
 
   // --- WARMUP PHASE ---
   // Dart's JIT compiler needs time to optimize code paths.
-  print('Warming up with a ${WARMUP_SIZE}x${WARMUP_SIZE} array...');
+  print('Warming up with a ${WARMUP_SIZE}x$WARMUP_SIZE array...');
   Array2d2D(WARMUP_SIZE, WARMUP_SIZE, valueBuilder: (x, y) => x + y)
       .forEach((v, x, y) {});
 
@@ -289,7 +291,7 @@ void main() {
           random.nextInt(BENCHMARK_SIZE), random.nextInt(BENCHMARK_SIZE)));
 
   // --- RANDOM ACCESS (GET VALUE) BENCHMARK ---
-  print('2. Random Get Value Test (${NUM_OPERATIONS} accesses):');
+  print('2. Random Get Value Test ($NUM_OPERATIONS accesses):');
 
   int get2DTime = runBenchmark('Array2d2D (List<List<T>>)', () {
     for (var p in randomCoords) {
@@ -306,7 +308,7 @@ void main() {
   print('----------------------------------------------------');
 
   // --- RANDOM ACCESS (SET VALUE) BENCHMARK ---
-  print('3. Random Set Value Test (${NUM_OPERATIONS} updates):');
+  print('3. Random Set Value Test ($NUM_OPERATIONS updates):');
 
   int set2DTime = runBenchmark('Array2d2D (List<List<T>>)', () {
     for (var p in randomCoords) {
@@ -323,12 +325,11 @@ void main() {
   print('----------------------------------------------------');
 
   // --- ITERATION (FOREACH) BENCHMARK ---
-  print(
-      '4. Full Iteration Test (forEach over all ${NUM_OPERATIONS} elements):');
+  print('4. Full Iteration Test (forEach over all $NUM_OPERATIONS elements):');
 
   int iteration2DTime = runBenchmark('Array2d2D (List<List<T>>)', () {
     int sum = 0;
-    array2D.forEach((v, x, y) => sum += v as int);
+    array2D.forEach((v, x, y) => sum += v);
   });
 
   int iteration1DTime = runBenchmark('Array2d1D (List<T>)', () {

@@ -1,4 +1,5 @@
 import 'package:array2d/src/point_data.dart';
+part 'array2d_proxy.dart';
 
 /// Represents a fixed-size two-dimensional array stored internally as a
 /// single one-dimensional array using a Column-Major mapping scheme.
@@ -55,28 +56,49 @@ class Array2d<T> {
   /// Returns the total number of elements in the 2D array.
   int get length => array.length;
 
-  /// Sets the value at the specified x (column) and y (row) coordinates.
-  ///
-  /// Throws a [RangeError] if the coordinates are out of bounds.
+  @deprecated
   void setValue(int x, int y, T value) {
-    try {
-      array[_to1DIndex(x, y)] = value;
-    } on RangeError {
+    if (x < 0 || x >= _width || y < 0 || y >= _height) {
       throw RangeError(
           "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
+    array[_to1DIndex(x, y)] = value;
   }
 
   /// Gets the value at the specified x (column) and y (row) coordinates.
   ///
   /// Throws a [RangeError] if the coordinates are out of bounds.
+  @deprecated
   T elementAt(int x, int y) {
-    try {
-      return array[_to1DIndex(x, y)];
-    } on RangeError {
+    if (x < 0 || x >= _width || y < 0 || y >= _height) {
       throw RangeError(
           "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
     }
+    return array[_to1DIndex(x, y)];
+  }
+
+  /// Returns a proxy object for the column at index [x].
+  /// This enables `array[x][y]` syntax.
+  Array2dColumn<T> operator [](int x) {
+    if (x < 0 || x >= _width) {
+      throw RangeError("Column index out of bounds: x=$x, width=$width");
+    }
+    return Array2dColumn(this, x);
+  }
+
+  @override
+  String toString() {
+    final buffer = StringBuffer();
+    for (int y = 0; y < _height; y++) {
+      for (int x = 0; x < _width; x++) {
+        buffer.write(array[_to1DIndex(x, y)]);
+        if (x < _width - 1) {
+          buffer.write(', ');
+        }
+      }
+      buffer.writeln();
+    }
+    return buffer.toString();
   }
 
   /// Returns the first element in the 2D array for which the provided test function returns true,
