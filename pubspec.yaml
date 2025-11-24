@@ -1,5 +1,5 @@
 name: array2d
-version: 2.3.2
+version: 2.3.4
 homepage: https://github.com/s1r1m1r1/array2d
 environment:
   sdk: ^3.5.0
