@@ -1,12 +1,12 @@
 import 'package:array2d/array2d.dart' show PointData;
-import 'package:array2d/src/i_array2d.dart';
+import 'package:array2d/src/array2d.dart';
 
 /// Represents a fixed-size two-dimensional array stored internally as a
 /// single one-dimensional array using a Column-Major mapping scheme.
 ///
 /// Provides methods for accessing, modifying, and iterating over elements
 /// using x (column) and y (row) coordinates.
-class LineArray2d<T> extends IArray2d<T> {
+class LineArray2d<T> extends Array2d<T> {
   /// The underlying 1D array storage.
   late final List<T> array;
 
@@ -40,10 +40,6 @@ class LineArray2d<T> extends IArray2d<T> {
   @override
   void setValue(int x, int y, dynamic value) {
     assert(value is T);
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-      throw RangeError(
-          "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
-    }
     array[_to1DIndex(x, y)] = value;
   }
 
@@ -52,10 +48,6 @@ class LineArray2d<T> extends IArray2d<T> {
   /// Throws a [RangeError] if the coordinates are out of bounds.
   @override
   T elementAt(int x, int y) {
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-      throw RangeError(
-          "Index out of bounds: x=$x, y=$y, width=$width, height=$height");
-    }
     return array[_to1DIndex(x, y)];
   }
 
