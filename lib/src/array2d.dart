@@ -7,7 +7,7 @@ abstract class Array2d<T> {
 
   static Array2d<T> build<T>(int width, int height,
       {required T Function(int x, int y) valueBuilder}) {
-    return LineArray2d<T>(width, height, valueBuilder: valueBuilder)
+    return LinearArray2d<T>(width, height, valueBuilder: valueBuilder)
         as Array2d<T>;
     // return GridArray2d<T>(width, height, valueBuilder: valueBuilder)
     // as Array2d<T>;

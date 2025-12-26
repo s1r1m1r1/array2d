@@ -6,7 +6,7 @@ import 'package:array2d/src/array2d.dart';
 ///
 /// Provides methods for accessing, modifying, and iterating over elements
 /// using x (column) and y (row) coordinates.
-class LineArray2d<T> extends Array2d<T> {
+class LinearArray2d<T> extends Array2d<T> {
   /// The underlying 1D array storage.
   late final List<T> array;
 
@@ -14,7 +14,7 @@ class LineArray2d<T> extends Array2d<T> {
   ///
   /// The [valueBuilder] function is used to initialize each element of the array.
   /// Throws an [ArgumentError] if width or height are not positive.
-  LineArray2d(super.width, super.height, {required super.valueBuilder}) {
+  LinearArray2d(super.width, super.height, {required super.valueBuilder}) {
     if (width <= 0 || height <= 0) {
       throw ArgumentError("Width and height must be positive integers.");
     }
