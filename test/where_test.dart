@@ -7,7 +7,8 @@ import 'package:test/test.dart';
 void main() {
   group('Array2d.where', () {
     test('should return the first element that satisfies the condition', () {
-      final array = Array2d<int>(3, 3, valueBuilder: (x, y) => x * 10 + y);
+      final array =
+          Array2d.build<int>(3, 3, valueBuilder: (x, y) => x * 10 + y);
 
       // Find the first element greater than 15
       final PointData<int>? foundElement =
@@ -18,7 +19,7 @@ void main() {
     });
 
     test('should return null if no element satisfies the condition', () {
-      final array = Array2d<int>(2, 2, valueBuilder: (x, y) => x + y);
+      final array = Array2d.build<int>(2, 2, valueBuilder: (x, y) => x + y);
 
       // Try to find an element greater than 10 (which doesn't exist)
       final PointData<int>? foundElement =
@@ -30,7 +31,7 @@ void main() {
     test(
         'should return the first element if the first element satisfies the condition',
         () {
-      final array = Array2d<int>(2, 2, valueBuilder: (x, y) => x + y);
+      final array = Array2d.build<int>(2, 2, valueBuilder: (x, y) => x + y);
 
       final foundElement = array
           .firstWhereabout((element) => element == 0); // Element at (0,0) is 0
@@ -41,7 +42,7 @@ void main() {
 
   group('Array2d.whereType', () {
     test('should return the first element of the specified type', () {
-      final array = Array2d<Object?>(3, 3, valueBuilder: (x, y) {
+      final array = Array2d.build<Object?>(3, 3, valueBuilder: (x, y) {
         if (x == 1 && y == 1) return 'hello';
         if (x == 2 && y == 0) return 123;
         return null;
@@ -57,8 +58,8 @@ void main() {
     });
 
     test('should return null if no element of the specified type is found', () {
-      final array =
-          Array2d<Object>(2, 2, valueBuilder: (x, y) => x + y); // All ints
+      final array = Array2d.build<Object>(2, 2,
+          valueBuilder: (x, y) => x + y); // All ints
 
       // Try to find a String element
       final foundString = array.firstWhereaboutType<String>();
@@ -66,7 +67,7 @@ void main() {
     });
 
     test('should handle nullable types correctly', () {
-      final array = Array2d<String?>(2, 2, valueBuilder: (x, y) {
+      final array = Array2d.build<String?>(2, 2, valueBuilder: (x, y) {
         if (x == 0 && y == 1) return 'world';
         return null;
       });
@@ -91,7 +92,7 @@ void main() {
       // but it's good to consider the theoretical behavior.
       // If the constructor allowed 0 width/height, this would be relevant.
       // For demonstration purposes, we'll simulate by creating an array and then trying to find a type.
-      final array = Array2d<int>(1, 1, valueBuilder: (x, y) => 5);
+      final array = Array2d.build<int>(1, 1, valueBuilder: (x, y) => 5);
       final foundDouble = array.firstWhereaboutType<double>();
       expect(foundDouble?.element, isNull);
     });

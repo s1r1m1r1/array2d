@@ -1,3 +1,5 @@
+## 2.4.0
+  added build method
 ## 2.3.0
 
 ## 2.2.0
