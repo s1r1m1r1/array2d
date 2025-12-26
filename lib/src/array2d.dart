@@ -5,16 +5,12 @@ abstract class Array2d<T> {
   final int height;
   Array2d(this.width, this.height, {required this.valueBuilder});
 
-  static int effectiveSize = 1000;
   static Array2d<T> build<T>(int width, int height,
       {required T Function(int x, int y) valueBuilder}) {
-    final size = width * height;
-    if (size < effectiveSize) {
-      return LineArray2d<T>(width, height, valueBuilder: valueBuilder)
-          as Array2d<T>;
-    }
-    return GridArray2d<T>(width, height, valueBuilder: valueBuilder)
+    return LineArray2d<T>(width, height, valueBuilder: valueBuilder)
         as Array2d<T>;
+    // return GridArray2d<T>(width, height, valueBuilder: valueBuilder)
+    // as Array2d<T>;
   }
 
   /// A function that builds the initial value for each cell in the array.
